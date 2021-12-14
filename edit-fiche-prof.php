@@ -32,7 +32,6 @@ if (isset($_POST)  && !empty($_POST)) {
     if (!empty($nom)  &&  !empty($prenom) && !empty($date_creation)) {
 
         $sql = " UPDATE  profs  SET   nom='" . $nom . "',prenom='" . $prenom . "',date_creation_profil='" . $date_creation . "' WHERE  id='" . $id_prof . "' ";
-        mysqli_select_db($conn, 'profs');
         $retval = mysqli_query($conn, $sql);
 
         if (!$retval) {
