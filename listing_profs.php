@@ -1,5 +1,18 @@
 <?php
 require_once 'connection.php';
+
+$sql = "SELECT id,nom,prenom,date_creation_profil FROM  profs ";
+$retval = mysqli_query( $conn, $sql );
+
+$results = array();
+
+// En cas d'erreur " Use of undefined constant MYSQLI_ASSOC - assumed 'MYSQLI_ASSOC' "  vous changez la constante  MYSQL_ASSOC  en MYSQLI_ASSOC
+while($row = mysqli_fetch_array($retval, MYSQLI_ASSOC)) {
+
+    $results[] = $row;
+
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -24,16 +37,16 @@ require_once 'connection.php';
 
                     <?php
 
-                       $sql = "SELECT id,nom,prenom,date_creation_profil FROM  profs ";
-                       $retval = mysqli_query( $conn, $sql );
+                      
                        if(! $retval ) {  ?>
                           <div class="alert alert-danger" role="alert">
                                   <a href="#" class="alert-link">L'affichage  a échoué</a>
                            </div>
-                       <?php  }else{   ?>
+                       <?php  }else{  
+                           
+                           if(count($results)>0){   ?>
 
-
-                          <table class="table">
+                            <table class="table">
                               <thead class="thead-light">
                                                <tr>
                                                               <th scope="col">ID</th>
@@ -43,34 +56,53 @@ require_once 'connection.php';
                                                               <th scope="col">ACTION</th>
                                                 </tr>
                              </thead>
+
+                           <?php
+                            for ($i=0; $i < count($results); $i++) {                              
+                          
+                               ?>
+                      
+
+                         
                              <tbody>
+
                                  
-                                  <?php   while($row = mysqli_fetch_array($retval, MYSQL_ASSOC)) {  ?>
+                                  <?php 
+                                  
+                                    ?>
 
                                     <tr>
-                                        <th scope="row"><?= $row["id"]  ?> </th>
-                                        <td><?= $row["nom"]  ?></td>
-                                        <td><?= $row["prenom"]  ?></td>
-                                        <td><?= $row["date_creation_profil"]  ?></td>
+                                        <th scope="row"><?= $results[$i]["id"]  ?> </th>
+                                        <td><?= $results[$i]["nom"]  ?></td>
+                                        <td><?= $results[$i]["prenom"]  ?></td>
+                                        <td><?= $results[$i]["date_creation_profil"]  ?></td>
 
-                                        <td><a href="./edit-fiche-prof.php?id_prof=<?= $row["id"] ?>"><button type="button" class="btn btn-primary">Modifier la fiche de prof</button> </a> 
+                                        <td><a href="./edit-fiche-prof.php?id_prof=<?= $results[$i]["id"] ?>"><button type="button" class="btn btn-primary">Modifier la fiche de prof</button> </a> 
 
-                                        <a href="./delete-fiche-prof.php?id_prof=<?= $row["id"] ?>"><button type="button" class="btn btn-primary">Supprimer la fiche de prof</button> </a>   </td>
+                                        <a href="./delete-fiche-prof.php?id_prof=<?= $results[$i]["id"] ?>"><button type="button" class="btn btn-primary">Supprimer la fiche de prof</button> </a>   </td>
 
                                         
                                     </tr>
                    
-                                   <?php   }   ?>                             
-                           
+                                   <?php   }   ?>  
+                                   
+                                   </tbody>
+
+                                 </table>
                             
-                             </tbody>
 
-                            </table> 
+                                <?php  }else{ ?>
 
-                           <?php   }   ?>
+                                    <div class="alert alert-warning" role="alert" style="margin-top:2%">
+                                          <a href="#" class="alert-link">Aucune fiche n'est disponible</a>
+                                     </div>
+                        
+                                <?php  } ?> 
+
+                        <?php  }   mysqli_close($conn);  ?>
 
                       
-                          <?php mysqli_close($conn);    ?>                       
+                                         
                      
                 </div>
             </div>
